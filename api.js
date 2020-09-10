@@ -9,7 +9,8 @@ class GoogleApi {
 
   constructor(email, privateKey) {
     this.email = email;
-    this.privateKey = privateKey
+    // Change \n with real line breaks: See https://github.com/auth0/node-jsonwebtoken/issues/642#issuecomment-585173594
+    this.privateKey = privateKey.replace(/\\n/gm, '\n')
   }
 
   setAuth() {
@@ -33,7 +34,7 @@ class GoogleApi {
       });
 
       if (res.data.incompleteSearch) {
-        return [...res.data.files, ...getFolderFiles(id, res.data.nextPageToken)]
+        return [...res.data.files, ...(await getFolderFiles(id, res.data.nextPageToken))]
       }
       return res.data.files;
     } catch(e) {

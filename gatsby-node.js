@@ -61,6 +61,8 @@ const download = async (files = [], destination = '', exportMime = 'application/
     } else {
       // get file
       const filePath = path.join(destination, parentFolder, `${file.name}${mimeTypes[exportMime]}`)
+      if (fs.existsSync(filePath)) return Promise.resolve();
+      
       let fileBuffer;
 
       if (file.mimeType.includes('vnd.google-apps')) {
