@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-googledrive",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "gatsby-node.js",
   "scripts": {
