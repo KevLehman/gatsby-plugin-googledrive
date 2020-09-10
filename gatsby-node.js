@@ -20,8 +20,7 @@ const mimeTypes = {
   'application/vnd.oasis.opendocument.presentation': '.pptx',
 };
 
-exports.onPreBootstrap = ({ graphql, actions }, { keyInfo, destination, exportMime, folderId  }) => {
-  return new Promise(async(resolve) => {
+exports.onPreBootstrap = async ({ graphql, actions }, { keyInfo, destination, exportMime, folderId  }) => {
     console.log('Bootstrapping API')
     api = new GoogleApi(keyInfo.email, keyInfo.private_key);
 
@@ -41,8 +40,6 @@ exports.onPreBootstrap = ({ graphql, actions }, { keyInfo, destination, exportMi
     await download(files, destination, exportMime)
 
     console.log('Finished downloading files')
-    resolve(true)
-  })
 }
 
 const download = async (files = [], destination = '', exportMime = 'application/pdf', parentFolder = '') => {
