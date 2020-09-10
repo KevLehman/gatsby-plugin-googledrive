@@ -20,27 +20,29 @@ const mimeTypes = {
   'application/vnd.oasis.opendocument.presentation': '.pptx',
 };
 
-exports.onPreBootstrap = async ({ graphql, actions }, { keyInfo, destination, exportMime, folderId  }) => {
-  console.log('Bootstrapping API')
-  api = new GoogleApi(keyInfo.email, keyInfo.private_key);
+exports.onPreBootstrap = ({ graphql, actions }, { keyInfo, destination, exportMime, folderId  }) => {
+  return new Promise(async(resolve) => {
+    console.log('Bootstrapping API')
+    api = new GoogleApi(keyInfo.email, keyInfo.private_key);
 
-  // get token
-  api.setAuth();
-  console.log('Token set succesfully');
+    // get token
+    api.setAuth();
+    console.log('Token set succesfully');
 
-  // create content directory
-  mkdirp(destination)
+    // create content directory
+    mkdirp(destination)
 
-  // get files
-  const files = await api.getFolderFiles(folderId)
-  console.log(`Succesfully obtained content from parent folder. Items: ${files.length}`);
+    // get files
+    const files = await api.getFolderFiles(folderId)
+    console.log(`Succesfully obtained content from parent folder. Items: ${files.length}`);
 
-  // download files
-  console.log('Starting downloading files')
+    // download files
+    console.log('Starting downloading files')
+    await download(files, destination, exportMime)
 
-  await download(files, destination, exportMime)
-
-  console.log('Finished downloading files')
+    console.log('Finished downloading files')
+    resolve(true)
+  })
 }
 
 const download = async (files = [], destination = '', exportMime = 'application/pdf', parentFolder = '') => {
